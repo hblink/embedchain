@@ -37,7 +37,7 @@ class ChromaDB(BaseVectorDB):
             self.config = ChromaDbConfig()
 
         self.settings = Settings()
-        self.settings.allow_reset = self.config.allow_reset
+        self.settings.allow_reset = self.config.allow_reset if hasattr(self.config, "allow_reset") else False
         if self.config.chroma_settings:
             for key, value in self.config.chroma_settings.items():
                 if hasattr(self.settings, key):
@@ -63,12 +63,25 @@ class ChromaDB(BaseVectorDB):
         This method is needed because `embedder` attribute needs to be set externally before it can be initialized.
         """
         if not self.embedder:
-            raise ValueError("Embedder not set. Please set an embedder with `set_embedder` before initialization.")
+            raise ValueError(
+                "Embedder not set. Please set an embedder with `_set_embedder()` function before initialization."
+            )
         self._get_or_create_collection(self.config.collection_name)
 
     def _get_or_create_db(self):
         """Called during initialization"""
         return self.client
+
+    def _generate_where_clause(self, where: Dict[str, any]) -> str:
+        # If only one filter is supplied, return it as is
+        # (no need to wrap in $and based on chroma docs)
+        if len(where.keys()) == 1:
+            return where
+        where_filters = []
+        for k, v in where.items():
+            if isinstance(v, str):
+                where_filters.append({k: v})
+        return {"$and": where_filters}
 
     def _get_or_create_collection(self, name: str) -> Collection:
         """
@@ -105,26 +118,41 @@ class ChromaDB(BaseVectorDB):
         if ids:
             args["ids"] = ids
         if where:
-            args["where"] = where
+            args["where"] = self._generate_where_clause(where)
         if limit:
             args["limit"] = limit
         return self.collection.get(**args)
 
     def get_advanced(self, where):
-        return self.collection.get(where=where, limit=1)
+        where_clause = self._generate_where_clause(where)
+        return self.collection.get(where=where_clause, limit=1)
 
-    def add(self, documents: List[str], metadatas: List[object], ids: List[str]) -> Any:
+    def add(
+        self,
+        embeddings: List[List[float]],
+        documents: List[str],
+        metadatas: List[object],
+        ids: List[str],
+        skip_embedding: bool,
+    ) -> Any:
         """
         Add vectors to chroma database
 
+        :param embeddings: list of embeddings to add
+        :type embeddings: List[List[str]]
         :param documents: Documents
         :type documents: List[str]
         :param metadatas: Metadatas
         :type metadatas: List[object]
         :param ids: ids
         :type ids: List[str]
+        :param skip_embedding: Optional. If True, then the embeddings are assumed to be already generated.
+        :type skip_embedding: bool
         """
-        self.collection.add(documents=documents, metadatas=metadatas, ids=ids)
+        if skip_embedding:
+            self.collection.add(embeddings=embeddings, documents=documents, metadatas=metadatas, ids=ids)
+        else:
+            self.collection.add(documents=documents, metadatas=metadatas, ids=ids)
 
     def _format_result(self, results: QueryResult) -> list[tuple[Document, float]]:
         """
@@ -144,9 +172,9 @@ class ChromaDB(BaseVectorDB):
             )
         ]
 
-    def query(self, input_query: List[str], n_results: int, where: Dict[str, Any]) -> List[str]:
+    def query(self, input_query: List[str], n_results: int, where: Dict[str, any], skip_embedding: bool) -> List[str]:
         """
-        Query contents from vector data base based on vector similarity
+        Query contents from vector database based on vector similarity
 
         :param input_query: list of query string
         :type input_query: List[str]
@@ -154,24 +182,34 @@ class ChromaDB(BaseVectorDB):
         :type n_results: int
         :param where: to filter data
         :type where: Dict[str, Any]
+        :param skip_embedding: Optional. If True, then the input_query is assumed to be already embedded.
+        :type skip_embedding: bool
         :raises InvalidDimensionException: Dimensions do not match.
         :return: The content of the document that matched your query.
         :rtype: List[str]
         """
         try:
-            result = self.collection.query(
-                query_texts=[
-                    input_query,
-                ],
-                n_results=n_results,
-                where=where,
-            )
+            if skip_embedding:
+                result = self.collection.query(
+                    query_embeddings=[
+                        input_query,
+                    ],
+                    n_results=n_results,
+                    where=where,
+                )
+            else:
+                result = self.collection.query(
+                    query_texts=[
+                        input_query,
+                    ],
+                    n_results=n_results,
+                    where=where,
+                )
         except InvalidDimensionException as e:
             raise InvalidDimensionException(
                 e.message()
                 + ". This is commonly a side-effect when an embedding function, different from the one used to add the embeddings, is used to retrieve an embedding from the database."  # noqa E501
             ) from None
-
         results_formatted = self._format_result(result)
         contents = [result[0].page_content for result in results_formatted]
         return contents
