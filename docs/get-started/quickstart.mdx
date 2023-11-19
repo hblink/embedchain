@@ -1,0 +1,91 @@
+---
+title: '🚀 Quickstart'
+description: '💡 Start building LLM powered apps under 30 seconds'
+---
+
+Embedchain is a Data Platform for LLMs - load, index, retrieve, and sync any unstructured data. Using embedchain, you can easily create LLM powered apps over any data. 
+
+Install embedchain python package:
+
+```bash
+pip install embedchain
+```
+
+<Tip>
+Embedchain now supports OpenAI's latest `gpt-4-turbo` model. Checkout the [docs here](/get-started/faq#how-to-use-gpt-4-turbo-model-released-on-openai-devday) on how to use it.
+</Tip>
+
+Creating an app involves 3 steps:
+
+<Steps>
+  <Step title="⚙️ Import app instance">
+```python
+from embedchain import Pipeline as App
+app = App()
+```
+  </Step>
+  <Step title="🗃️ Add data sources">
+```python
+# Add different data sources
+app.add("https://en.wikipedia.org/wiki/Elon_Musk")
+app.add("https://www.forbes.com/profile/elon-musk")
+# You can also add local data sources such as pdf, csv files etc.
+# app.add("/path/to/file.pdf")
+```
+  </Step>
+  <Step title="💬 Query or chat or search context on your data">
+```python
+app.query("What is the net worth of Elon Musk today?")
+# Answer: The net worth of Elon Musk today is $258.7 billion.
+```
+  </Step>
+  <Step title="🚀 (Optional) Deploy your pipeline to Embedchain Platform">
+```python
+app.deploy()
+# 🔑 Enter your Embedchain API key. You can find the API key at https://app.embedchain.ai/settings/keys/
+# ec-xxxxxx
+
+# 🛠️ Creating pipeline on the platform...
+# 🎉🎉🎉 Pipeline created successfully! View your pipeline: https://app.embedchain.ai/pipelines/xxxxx
+
+# 🛠️ Adding data to your pipeline...
+# ✅ Data of type: web_page, value: https://www.forbes.com/profile/elon-musk added successfully.
+```
+  </Step>
+</Steps>
+
+Putting it together, you can run your first app using the following code. Make sure to set the `OPENAI_API_KEY` 🔑 environment variable in the code.
+
+```python
+import os
+from embedchain import Pipeline as App
+
+os.environ["OPENAI_API_KEY"] = "xxx"
+app = App()
+
+# Add different data sources
+app.add("https://en.wikipedia.org/wiki/Elon_Musk")
+app.add("https://www.forbes.com/profile/elon-musk")
+# You can also add local data sources such as pdf, csv files etc.
+# app.add("/path/to/file.pdf")
+
+response = app.query("What is the net worth of Elon Musk today?")
+print(response)
+# Answer: The net worth of Elon Musk today is $258.7 billion.
+
+app.deploy()
+# 🔑 Enter your Embedchain API key. You can find the API key at https://app.embedchain.ai/settings/keys/
+# ec-xxxxxx
+
+# 🛠️ Creating pipeline on the platform...
+# 🎉🎉🎉 Pipeline created successfully! View your pipeline: https://app.embedchain.ai/pipelines/xxxxx
+
+# 🛠️ Adding data to your pipeline...
+# ✅ Data of type: web_page, value: https://www.forbes.com/profile/elon-musk added successfully.
+```
+
+You can try it out yourself using the following Google Colab notebook:
+
+<a href="https://colab.research.google.com/drive/17ON1LPonnXAtLaZEebnOktstB_1cJJmh?usp=sharing">
+    <img src="https://camo.githubusercontent.com/84f0493939e0c4de4e6dbe113251b4bfb5353e57134ffd9fcab6b8714514d4d1/68747470733a2f2f636f6c61622e72657365617263682e676f6f676c652e636f6d2f6173736574732f636f6c61622d62616467652e737667" alt="Open in Colab" />
+</a>

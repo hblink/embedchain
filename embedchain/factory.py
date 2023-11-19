@@ -13,16 +13,16 @@ class LlmFactory:
         "azure_openai": "embedchain.llm.azure_openai.AzureOpenAILlm",
         "cohere": "embedchain.llm.cohere.CohereLlm",
         "gpt4all": "embedchain.llm.gpt4all.GPT4ALLLlm",
-        "hugging_face_llm": "embedchain.llm.hugging_face_llm.HuggingFaceLlm",
+        "huggingface": "embedchain.llm.huggingface.HuggingFaceLlm",
         "jina": "embedchain.llm.jina.JinaLlm",
         "llama2": "embedchain.llm.llama2.Llama2Llm",
         "openai": "embedchain.llm.openai.OpenAILlm",
         "vertexai": "embedchain.llm.vertex_ai.VertexAILlm",
     }
     provider_to_config_class = {
-        "embedchain": "embedchain.config.llm.base_llm_config.BaseLlmConfig",
-        "openai": "embedchain.config.llm.base_llm_config.BaseLlmConfig",
-        "anthropic": "embedchain.config.llm.base_llm_config.BaseLlmConfig",
+        "embedchain": "embedchain.config.llm.base.BaseLlmConfig",
+        "openai": "embedchain.config.llm.base.BaseLlmConfig",
+        "anthropic": "embedchain.config.llm.base.BaseLlmConfig",
     }
 
     @classmethod
@@ -41,13 +41,16 @@ class LlmFactory:
 
 class EmbedderFactory:
     provider_to_class = {
+        "azure_openai": "embedchain.embedder.openai.OpenAIEmbedder",
         "gpt4all": "embedchain.embedder.gpt4all.GPT4AllEmbedder",
         "huggingface": "embedchain.embedder.huggingface.HuggingFaceEmbedder",
-        "vertexai": "embedchain.embedder.vertexai.VertexAiEmbedder",
         "openai": "embedchain.embedder.openai.OpenAIEmbedder",
+        "vertexai": "embedchain.embedder.vertexai.VertexAIEmbedder",
     }
     provider_to_config_class = {
+        "azure_openai": "embedchain.config.embedder.base.BaseEmbedderConfig",
         "openai": "embedchain.config.embedder.base.BaseEmbedderConfig",
+        "gpt4all": "embedchain.config.embedder.base.BaseEmbedderConfig",
     }
 
     @classmethod
@@ -69,11 +72,19 @@ class VectorDBFactory:
         "chroma": "embedchain.vectordb.chroma.ChromaDB",
         "elasticsearch": "embedchain.vectordb.elasticsearch.ElasticsearchDB",
         "opensearch": "embedchain.vectordb.opensearch.OpenSearchDB",
+        "pinecone": "embedchain.vectordb.pinecone.PineconeDB",
+        "qdrant": "embedchain.vectordb.qdrant.QdrantDB",
+        "weaviate": "embedchain.vectordb.weaviate.WeaviateDB",
+        "zilliz": "embedchain.vectordb.zilliz.ZillizVectorDB",
     }
     provider_to_config_class = {
         "chroma": "embedchain.config.vectordb.chroma.ChromaDbConfig",
         "elasticsearch": "embedchain.config.vectordb.elasticsearch.ElasticsearchDBConfig",
         "opensearch": "embedchain.config.vectordb.opensearch.OpenSearchDBConfig",
+        "pinecone": "embedchain.config.vectordb.pinecone.PineconeDBConfig",
+        "qdrant": "embedchain.config.vectordb.qdrant.QdrantDBConfig",
+        "weaviate": "embedchain.config.vectordb.weaviate.WeaviateDBConfig",
+        "zilliz": "embedchain.config.vectordb.zilliz.ZillizDBConfig",
     }
 
     @classmethod

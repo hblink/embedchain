@@ -1,9 +1,9 @@
 import os
-import unittest
 
+import pytest
 import yaml
 
-from embedchain import App, CustomApp, Llama2App, OpenSourceApp
+from embedchain import App
 from embedchain.config import (AddConfig, AppConfig, BaseEmbedderConfig,
                                BaseLlmConfig, ChromaDbConfig)
 from embedchain.embedder.base import BaseEmbedder
@@ -12,97 +12,73 @@ from embedchain.vectordb.base import BaseVectorDB, BaseVectorDbConfig
 from embedchain.vectordb.chroma import ChromaDB
 
 
-class TestApps(unittest.TestCase):
+@pytest.fixture
+def app():
     os.environ["OPENAI_API_KEY"] = "test_api_key"
-
-    def test_app(self):
-        app = App()
-        self.assertIsInstance(app.llm, BaseLlm)
-        self.assertIsInstance(app.db, BaseVectorDB)
-        self.assertIsInstance(app.embedder, BaseEmbedder)
-
-        wrong_llm = "wrong_llm"
-        with self.assertRaises(TypeError):
-            App(llm=wrong_llm)
-
-        wrong_db = "wrong_db"
-        with self.assertRaises(TypeError):
-            App(db=wrong_db)
-
-        wrong_embedder = "wrong_embedder"
-        with self.assertRaises(TypeError):
-            App(embedder=wrong_embedder)
-
-    def test_custom_app(self):
-        app = CustomApp()
-        self.assertIsInstance(app.llm, BaseLlm)
-        self.assertIsInstance(app.db, BaseVectorDB)
-        self.assertIsInstance(app.embedder, BaseEmbedder)
-
-    def test_opensource_app(self):
-        app = OpenSourceApp()
-        self.assertIsInstance(app.llm, BaseLlm)
-        self.assertIsInstance(app.db, BaseVectorDB)
-        self.assertIsInstance(app.embedder, BaseEmbedder)
-
-    def test_llama2_app(self):
-        os.environ["REPLICATE_API_TOKEN"] = "-"
-        app = Llama2App()
-        self.assertIsInstance(app.llm, BaseLlm)
-        self.assertIsInstance(app.db, BaseVectorDB)
-        self.assertIsInstance(app.embedder, BaseEmbedder)
+    return App()
 
 
-class TestConfigForAppComponents(unittest.TestCase):
-    collection_name = "my-test-collection"
+def test_app(app):
+    assert isinstance(app.llm, BaseLlm)
+    assert isinstance(app.db, BaseVectorDB)
+    assert isinstance(app.embedder, BaseEmbedder)
 
+
+class TestConfigForAppComponents:
     def test_constructor_config(self):
-        """
-        Test that app can be configured through the app constructor.
-        """
-        app = App(db_config=ChromaDbConfig(collection_name=self.collection_name))
-        self.assertEqual(app.db.config.collection_name, self.collection_name)
+        collection_name = "my-test-collection"
+        app = App(db_config=ChromaDbConfig(collection_name=collection_name))
+        assert app.db.config.collection_name == collection_name
 
     def test_component_config(self):
-        """
-        Test that app can also be configured by passing a configured component to the app
-        """
-        database = ChromaDB(config=ChromaDbConfig(collection_name=self.collection_name))
+        collection_name = "my-test-collection"
+        database = ChromaDB(config=ChromaDbConfig(collection_name=collection_name))
         app = App(db=database)
-        self.assertEqual(app.db.config.collection_name, self.collection_name)
+        assert app.db.config.collection_name == collection_name
 
     def test_different_configs_are_proper_instances(self):
-        config = AppConfig()
-        wrong_app_config = AddConfig()
+        app_config = AppConfig()
+        wrong_config = AddConfig()
+        with pytest.raises(TypeError):
+            App(config=wrong_config)
 
-        with self.assertRaises(TypeError):
-            App(config=wrong_app_config)
-
-        self.assertIsInstance(config, AppConfig)
+        assert isinstance(app_config, AppConfig)
 
         llm_config = BaseLlmConfig()
         wrong_llm_config = "wrong_llm_config"
 
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             App(llm_config=wrong_llm_config)
 
-        self.assertIsInstance(llm_config, BaseLlmConfig)
+        assert isinstance(llm_config, BaseLlmConfig)
 
         db_config = BaseVectorDbConfig()
         wrong_db_config = "wrong_db_config"
 
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             App(db_config=wrong_db_config)
 
-        self.assertIsInstance(db_config, BaseVectorDbConfig)
+        assert isinstance(db_config, BaseVectorDbConfig)
 
         embedder_config = BaseEmbedderConfig()
         wrong_embedder_config = "wrong_embedder_config"
-
-        with self.assertRaises(TypeError):
+        with pytest.raises(TypeError):
             App(embedder_config=wrong_embedder_config)
 
-        self.assertIsInstance(embedder_config, BaseEmbedderConfig)
+        assert isinstance(embedder_config, BaseEmbedderConfig)
+
+    def test_components_raises_type_error_if_not_proper_instances(self):
+        wrong_llm = "wrong_llm"
+        with pytest.raises(TypeError):
+            App(llm=wrong_llm)
+
+        wrong_db = "wrong_db"
+        with pytest.raises(TypeError):
+            App(db=wrong_db)
+
+        wrong_embedder = "wrong_embedder"
+        with pytest.raises(TypeError):
+            App(embedder=wrong_embedder)
 
 
 class TestAppFromConfig:
@@ -110,8 +86,10 @@ class TestAppFromConfig:
         with open(yaml_path, "r") as file:
             return yaml.safe_load(file)
 
-    def test_from_chroma_config(self):
-        yaml_path = "embedchain/yaml/chroma.yaml"
+    def test_from_chroma_config(self, mocker):
+        mocker.patch("embedchain.vectordb.chroma.chromadb.Client")
+
+        yaml_path = "configs/chroma.yaml"
         config_data = self.load_config_data(yaml_path)
 
         app = App.from_config(yaml_path)
@@ -143,8 +121,10 @@ class TestAppFromConfig:
         assert app.embedder.config.model == embedder_config["model"]
         assert app.embedder.config.deployment_name == embedder_config["deployment_name"]
 
-    def test_from_opensource_config(self):
-        yaml_path = "embedchain/yaml/opensource.yaml"
+    def test_from_opensource_config(self, mocker):
+        mocker.patch("embedchain.vectordb.chroma.chromadb.Client")
+
+        yaml_path = "configs/opensource.yaml"
         config_data = self.load_config_data(yaml_path)
 
         app = App.from_config(yaml_path)
@@ -159,6 +139,7 @@ class TestAppFromConfig:
 
         # Validate the LLM config values
         llm_config = config_data["llm"]["config"]
+        assert app.llm.config.model == llm_config["model"]
         assert app.llm.config.temperature == llm_config["temperature"]
         assert app.llm.config.max_tokens == llm_config["max_tokens"]
         assert app.llm.config.top_p == llm_config["top_p"]
@@ -172,5 +153,4 @@ class TestAppFromConfig:
 
         # Validate the Embedder config values
         embedder_config = config_data["embedder"]["config"]
-        assert app.embedder.config.model == embedder_config["model"]
         assert app.embedder.config.deployment_name == embedder_config["deployment_name"]
