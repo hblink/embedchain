@@ -1,6 +1,6 @@
 from embedchain.config.vectordb.base import BaseVectorDbConfig
 from embedchain.embedder.base import BaseEmbedder
-from embedchain.helper.json_serializable import JSONSerializable
+from embedchain.helpers.json_serializable import JSONSerializable
 
 
 class BaseVectorDB(JSONSerializable):
@@ -49,7 +49,7 @@ class BaseVectorDB(JSONSerializable):
         raise NotImplementedError
 
     def query(self):
-        """Query contents from vector data base based on vector similarity"""
+        """Query contents from vector database based on vector similarity"""
         raise NotImplementedError
 
     def count(self) -> int:
@@ -74,4 +74,9 @@ class BaseVectorDB(JSONSerializable):
         :param name: Name of the collection.
         :type name: str
         """
+        raise NotImplementedError
+
+    def delete(self):
+        """Delete from database."""
+
         raise NotImplementedError

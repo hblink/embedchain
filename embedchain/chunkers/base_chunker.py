@@ -1,6 +1,9 @@
 import hashlib
+import logging
+from typing import Optional
 
-from embedchain.helper.json_serializable import JSONSerializable
+from embedchain.config.add_config import ChunkerConfig
+from embedchain.helpers.json_serializable import JSONSerializable
 from embedchain.models.data_type import DataType
 
 
@@ -10,11 +13,11 @@ class BaseChunker(JSONSerializable):
         self.text_splitter = text_splitter
         self.data_type = None
 
-    def create_chunks(self, loader, src, app_id=None):
+    def create_chunks(self, loader, src, app_id=None, config: Optional[ChunkerConfig] = None):
         """
         Loads data and chunks it.
 
-        :param loader: The loader which's `load_data` method is used to create
+        :param loader: The loader whose `load_data` method is used to create
         the raw data.
         :param src: The data to be handled by the loader. Can be a URL for
         remote sources or local content for local loaders.
@@ -22,7 +25,9 @@ class BaseChunker(JSONSerializable):
         """
         documents = []
         chunk_ids = []
-        idMap = {}
+        id_map = {}
+        min_chunk_size = config.min_chunk_size if config is not None else 1
+        logging.info(f"Skipping chunks smaller than {min_chunk_size} characters")
         data_result = loader.load_data(src)
         data_records = data_result["data"]
         doc_id = data_result["doc_id"]
@@ -41,12 +46,11 @@ class BaseChunker(JSONSerializable):
             url = meta_data["url"]
 
             chunks = self.get_chunks(content)
-
             for chunk in chunks:
                 chunk_id = hashlib.sha256((chunk + url).encode()).hexdigest()
                 chunk_id = f"{app_id}--{chunk_id}" if app_id is not None else chunk_id
-                if idMap.get(chunk_id) is None:
-                    idMap[chunk_id] = True
+                if id_map.get(chunk_id) is None and len(chunk) >= min_chunk_size:
+                    id_map[chunk_id] = True
                     chunk_ids.append(chunk_id)
                     documents.append(chunk)
                     metadatas.append(meta_data)
@@ -73,5 +77,6 @@ class BaseChunker(JSONSerializable):
 
         # TODO: This should be done during initialization. This means it has to be done in the child classes.
 
-    def get_word_count(self, documents):
+    @staticmethod
+    def get_word_count(documents) -> int:
         return sum([len(document.split(" ")) for document in documents])

@@ -1,7 +1,6 @@
 app:
   config:
     id: 'my-app'
-    collection_name: 'my-app'
 
 llm:
   provider: openai
@@ -23,4 +22,3 @@ embedder:
   provider: openai
   config:
     model: 'text-embedding-ada-002'
-    deployment_name: 'test-deployment'

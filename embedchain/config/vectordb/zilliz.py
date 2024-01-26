@@ -2,7 +2,7 @@ import os
 from typing import Optional
 
 from embedchain.config.vectordb.base import BaseVectorDbConfig
-from embedchain.helper.json_serializable import register_deserializable
+from embedchain.helpers.json_serializable import register_deserializable
 
 
 @register_deserializable
@@ -26,7 +26,7 @@ class ZillizDBConfig(BaseVectorDbConfig):
         :param uri: Cluster endpoint obtained from the Zilliz Console, defaults to None
         :type uri: Optional[str], optional
         :param token: API Key, if a Serverless Cluster, username:password, if a Dedicated Cluster, defaults to None
-        :type port: Optional[str], optional
+        :type token: Optional[str], optional
         """
         self.uri = uri or os.environ.get("ZILLIZ_CLOUD_URI")
         if not self.uri:

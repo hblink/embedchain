@@ -1,14 +1,23 @@
-from typing import Any, Callable, Optional
+from collections.abc import Callable
+from typing import Any, Optional
 
 from embedchain.config.embedder.base import BaseEmbedderConfig
 
 try:
-    from chromadb.api.types import Documents, Embeddings
+    from chromadb.api.types import Embeddable, EmbeddingFunction, Embeddings
 except RuntimeError:
-    from embedchain.utils import use_pysqlite3
+    from embedchain.utils.misc import use_pysqlite3
 
     use_pysqlite3()
-    from chromadb.api.types import Documents, Embeddings
+    from chromadb.api.types import Embeddable, EmbeddingFunction, Embeddings
+
+
+class EmbeddingFunc(EmbeddingFunction):
+    def __init__(self, embedding_fn: Callable[[list[str]], list[str]]):
+        self.embedding_fn = embedding_fn
+
+    def __call__(self, input: Embeddable) -> Embeddings:
+        return self.embedding_fn(input)
 
 
 class BaseEmbedder:
@@ -21,7 +30,7 @@ class BaseEmbedder:
 
     def __init__(self, config: Optional[BaseEmbedderConfig] = None):
         """
-        Intialize the embedder class.
+        Initialize the embedder class.
 
         :param config: embedder configuration option class, defaults to None
         :type config: Optional[BaseEmbedderConfig], optional
@@ -66,7 +75,16 @@ class BaseEmbedder:
         :rtype: Callable
         """
 
-        def embed_function(texts: Documents) -> Embeddings:
-            return embeddings.embed_documents(texts)
+        return EmbeddingFunc(embeddings.embed_documents)
 
-        return embed_function
+    def to_embeddings(self, data: str, **_):
+        """
+        Convert data to embeddings
+
+        :param data: data to convert to embeddings
+        :type data: str
+        :return: embeddings
+        :rtype: list[float]
+        """
+        embeddings = self.embedding_fn([data])
+        return embeddings[0]
