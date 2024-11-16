@@ -1,285 +1,242 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Embedchain",
-  "logo": {
-    "dark": "/logo/dark-rt.svg",
-    "light": "/logo/light-rt.svg",
-    "href": "https://github.com/embedchain/embedchain"
-  },
-  "favicon": "/favicon.png",
+  "name": "Mem0.ai",
+  "favicon": "/logo/favicon.png",
   "colors": {
-    "primary": "#3B2FC9",
-    "light": "#6673FF",
-    "dark": "#3B2FC9",
+    "primary": "#6c60f0",
+    "light": "#E6FFA2",
+    "dark": "#a3df02",
     "background": {
       "dark": "#0f1117",
       "light": "#fff"
     }
   },
-  "modeToggle": {
-    "default": "dark"
+  "logo": {
+    "dark": "/logo/dark.svg",
+    "light": "/logo/light.svg",
+    "href": "https://github.com/mem0ai/mem0"
   },
-  "openapi": [
-    "/rest-api.json"
-  ],
-  "metadata": {
-    "og:image": "/images/og.png",
-    "twitter:site": "@embedchain"
+  "topbarCtaButton": {
+    "name": "Your Dashboard",
+    "url": "https://app.mem0.ai"
   },
-  "tabs": [
+  "anchors": [
     {
-      "name": "Examples",
-      "url": "examples"
+      "name": "Your Dashboard",
+      "icon": "chart-simple",
+      "url": "https://app.mem0.ai"
     },
     {
       "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
-  "anchors": [
+      "url": "api-reference",
+      "icon": "square-terminal"
+    },
     {
-      "name": "Talk to founders",
-      "icon": "calendar",
-      "url": "https://cal.com/taranjeetio/ec"
-    }
-  ],
-  "topbarLinks": [
+      "name": "Discord",
+      "icon": "discord",
+      "url": "https://mem0.dev/DiD"
+    },
     {
       "name": "GitHub",
-      "url": "https://github.com/embedchain/embedchain"
+      "icon": "github",
+      "url": "https://github.com/mem0ai/mem0"
+    },
+    {
+      "name": "Support",
+      "icon": "envelope",
+      "url": "mailto:taranjeet@mem0.ai"
     }
   ],
-  "topbarCtaButton": {
-    "name": "Join our slack",
-    "url": "https://embedchain.ai/slack"
-  },
-  "primaryTab": {
-    "name": "Documentation"
-  },
   "navigation": [
     {
       "group": "Get Started",
       "pages": [
-        "get-started/quickstart",
-        "get-started/introduction",
-        "get-started/faq",
-        "get-started/full-stack",
+        "overview",
+        "quickstart",
+        "playground",
+        "features"
+      ]
+    },
+    {
+      "group": "Platform",
+      "pages": [
+        "platform/overview",
+        "platform/quickstart",
         {
-          "group": "🔗 Integrations",
-          "pages": [
-            "integration/langsmith",
-            "integration/chainlit",
-            "integration/streamlit-mistral"
-          ]
+          "group": "Features",
+          "pages": ["features/selective-memory", "features/custom-categories", "features/direct-import", "features/async-client"]
         }
       ]
     },
     {
-      "group": "Use cases",
+      "group": "Open Source",
       "pages": [
-        "use-cases/introduction",
-        "use-cases/chatbots",
-        "use-cases/question-answering",
-        "use-cases/semantic-search"
-      ]
-    },
-    {
-      "group": "Components",
-      "pages": [
-        "components/introduction",
+        "open-source/quickstart",
         {
-          "group": "🗂️ Data sources",
+          "group": "Graph Memory",
+          "pages": ["open-source/graph_memory/overview", "open-source/graph_memory/features"]
+        },
+        {
+          "group": "LLMs",
           "pages": [
-            "components/data-sources/overview",
+            "components/llms/overview",
+            "components/llms/config",
             {
-              "group": "Data types",
+              "group": "Supported LLMs",
               "pages": [
-                "components/data-sources/pdf-file",
-                "components/data-sources/csv",
-                "components/data-sources/json",
-                "components/data-sources/text",
-                "components/data-sources/directory",
-                "components/data-sources/web-page",
-                "components/data-sources/youtube-channel",
-                "components/data-sources/youtube-video",
-                "components/data-sources/docs-site",
-                "components/data-sources/mdx",
-                "components/data-sources/docx",
-                "components/data-sources/notion",
-                "components/data-sources/sitemap",
-                "components/data-sources/xml",
-                "components/data-sources/qna",
-                "components/data-sources/openapi",
-                "components/data-sources/gmail",
-                "components/data-sources/github",
-                "components/data-sources/postgres",
-                "components/data-sources/mysql",
-                "components/data-sources/slack",
-                "components/data-sources/discord",
-                "components/data-sources/discourse",
-                "components/data-sources/substack",
-                "components/data-sources/beehiiv",
-                "components/data-sources/directory",
-                "components/data-sources/dropbox",
-                "components/data-sources/image",
-                "components/data-sources/custom"
+                "components/llms/models/openai",
+                "components/llms/models/anthropic",
+                "components/llms/models/azure_openai",
+                "components/llms/models/ollama",
+                "components/llms/models/together",
+                "components/llms/models/groq",
+                "components/llms/models/litellm",
+                "components/llms/models/mistral_AI",
+                "components/llms/models/google_AI",
+                "components/llms/models/aws_bedrock",
+                "components/llms/models/gemini"
               ]
-            },
-            "components/data-sources/data-type-handling"
+            }
           ]
         },
         {
-          "group": "🗄️ Vector databases",
+          "group": "Vector Databases",
           "pages": [
-                "components/vector-databases/chromadb",
-                "components/vector-databases/elasticsearch",
-                "components/vector-databases/pinecone",
-                "components/vector-databases/opensearch",
-                "components/vector-databases/qdrant",
-                "components/vector-databases/weaviate",
-                "components/vector-databases/zilliz"
+            "components/vectordbs/overview",
+            "components/vectordbs/config",
+            {
+              "group": "Supported Vector Databases",
+              "pages": [
+                "components/vectordbs/dbs/qdrant",
+                "components/vectordbs/dbs/chroma",
+                "components/vectordbs/dbs/pgvector",
+                "components/vectordbs/dbs/milvus",
+                "components/vectordbs/dbs/azure_ai_search"
+              ]
+            }
           ]
         },
-        "components/llms",
-        "components/embedding-models",
-        "components/evaluation"
-      ]
-    },
-    {
-      "group": "Deployment",
-      "pages": [
-        "get-started/deployment",
-        "deployment/fly_io",
-        "deployment/modal_com",
-        "deployment/render_com",
-        "deployment/railway",
-        "deployment/streamlit_io",
-        "deployment/gradio_app",
-        "deployment/huggingface_spaces",
-        "deployment/embedchain_ai"
-      ]
-    },
-    {
-      "group": "Community",
-      "pages": [
-        "community/connect-with-us"
-      ]
-    },
-    {
-      "group": "Examples",
-      "pages": [
-        "examples/chat-with-PDF",
-        "examples/notebooks-and-replits",
         {
-          "group": "REST API Service",
+          "group": "Embedding Models",
           "pages": [
-            "examples/rest-api/getting-started",
-            "examples/rest-api/create",
-            "examples/rest-api/get-all-apps",
-            "examples/rest-api/add-data",
-            "examples/rest-api/get-data",
-            "examples/rest-api/query",
-            "examples/rest-api/deploy",
-            "examples/rest-api/delete",
-            "examples/rest-api/check-status"
+            "components/embedders/overview",
+            "components/embedders/config",
+            {
+              "group": "Supported Embedding Models",
+              "pages": [
+                "components/embedders/models/openai",
+                "components/embedders/models/azure_openai",
+                "components/embedders/models/ollama",
+                "components/embedders/models/huggingface",
+                "components/embedders/models/vertexai",
+                "components/embedders/models/gemini"
+              ]
+            }
           ]
         },
-        "examples/full_stack",
-        "examples/openai-assistant",
-        "examples/opensource-assistant",
-        "examples/nextjs-assistant",
-        "examples/slack-AI"
-      ]
-    },
-    {
-      "group": "Chatbots",
-      "pages": [
-        "examples/discord_bot",
-        "examples/slack_bot",
-        "examples/telegram_bot",
-        "examples/whatsapp_bot",
-        "examples/poe_bot"
-      ]
-    },
-    {
-      "group": "Showcase",
-      "pages": [
-        "examples/showcase"
+        {
+          "group": "Features",
+          "pages": ["features/openai_compatibility", "features/custom-prompts"]
+        }
       ]
     },
     {
       "group": "API Reference",
       "pages": [
-        "api-reference/app/overview",
+        "api-reference/overview",
         {
-          "group": "App methods",
+          "group": "Memory APIs",
           "pages": [
-            "api-reference/app/add",
-            "api-reference/app/query",
-            "api-reference/app/chat",
-            "api-reference/app/search",
-            "api-reference/app/get",
-            "api-reference/app/evaluate",
-            "api-reference/app/deploy",
-            "api-reference/app/reset",
-            "api-reference/app/delete"
+            "api-reference/memory/v1-get-memories",
+            "api-reference/memory/v2-get-memories",
+            "api-reference/memory/add-memories",
+            "api-reference/memory/delete-memories",
+            "api-reference/memory/get-memory",
+            "api-reference/memory/update-memory",
+            "api-reference/memory/delete-memory",
+            "api-reference/memory/v1-search-memories",
+            "api-reference/memory/v2-search-memories",
+            "api-reference/memory/history-memory"
           ]
         },
-        "api-reference/store/openai-assistant",
-        "api-reference/store/ai-assistants",
-        "api-reference/advanced/configuration"
+        {
+          "group": "Entities APIs",
+          "pages": [
+            "api-reference/entities/get-users",
+            "api-reference/entities/delete-user"
+          ]
+        },
+        {
+          "group": "Organizations APIs",
+          "pages": [
+            "api-reference/organization/get-orgs",
+            "api-reference/organization/get-org",
+            "api-reference/organization/create-org",
+            "api-reference/organization/delete-org",
+            {
+              "group": "Members APIs",
+              "pages": [
+                "api-reference/organization/get-org-members",
+                "api-reference/organization/add-org-member",
+                "api-reference/organization/update-org-member",
+                "api-reference/organization/delete-org-member"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "Projects APIs",
+          "pages": [
+            "api-reference/project/get-projects",
+            "api-reference/project/get-project",
+            "api-reference/project/create-project",
+            "api-reference/project/delete-project",
+            {
+              "group": "Members APIs",
+              "pages":[
+                "api-reference/project/get-project-members",
+                "api-reference/project/add-project-member",
+                "api-reference/project/update-project-member",
+                "api-reference/project/delete-project-member"
+              ]
+            }
+          ]
+        }
       ]
     },
     {
-      "group": "Contributing",
+      "group": "Integrations",
       "pages": [
-        "contribution/guidelines",
-        "contribution/dev",
-        "contribution/docs",
-        "contribution/python",
-        "contribution/javascript"
+        "integrations/vercel-ai-sdk",
+        "integrations/crewai",
+        "integrations/multion",
+        "integrations/autogen",
+        "integrations/langchain",
+        "integrations/langgraph",
+        "integrations/llama-index"
       ]
     },
     {
-      "group": "Product",
+      "group": "💡 Examples",
       "pages": [
-        "product/release-notes"
+        "examples/overview",
+        "examples/mem0-with-ollama",
+        "examples/personal-ai-tutor",
+        "examples/customer-support-agent",
+        "examples/personal-travel-assistant"
       ]
     }
   ],
   "footerSocials": {
-    "website": "https://embedchain.ai",
-    "github": "https://github.com/embedchain/embedchain",
-    "slack": "https://embedchain.ai/slack",
-    "discord": "https://discord.gg/6PzXDgEjG5",
-    "twitter": "https://twitter.com/embedchain",
-    "linkedin": "https://www.linkedin.com/company/embedchain"
+    "discord": "https://mem0.dev/DiD",
+    "x": "https://x.com/mem0ai",
+    "github": "https://github.com/mem0ai",
+    "linkedin": "https://www.linkedin.com/company/mem0/"
   },
-  "isWhiteLabeled": true,
   "analytics": {
     "posthog": {
-      "apiKey": "phc_PHQDA5KwztijnSojsxJ2c1DuJd52QCzJzT2xnSGvjN2",
-      "apiHost": "https://app.embedchain.ai/ingest"
-    },
-    "ga4": {
-      "measurementId": "G-4QK7FJE6T3"
+      "apiKey": "phc_hgJkUVJFYtmaJqrvf6CYN67TIQ8yhXAkWzUn9AMU4yX",
+      "apiHost": "https://mango.mem0.ai"
     }
-  },
-  "feedback": {
-    "suggestEdit": true,
-    "raiseIssue": true,
-    "thumbsRating": true
-  },
-  "search": {
-    "prompt": "✨ Search embedchain docs..."
-  },
-  "api": {
-    "baseUrl": "http://localhost:8080"
-  },
-  "redirects": [
-    {
-      "source": "/changelog/command-line",
-      "destination": "/get-started/introduction"
-    }
-  ]
+  }
 }
