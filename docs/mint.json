@@ -65,7 +65,8 @@
         {
           "group": "Features",
           "pages": ["features/selective-memory", "features/custom-categories", "features/direct-import", "features/async-client"]
-        }
+        },
+        "features/langchain-tools"
       ]
     },
     {
@@ -111,7 +112,8 @@
                 "components/vectordbs/dbs/chroma",
                 "components/vectordbs/dbs/pgvector",
                 "components/vectordbs/dbs/milvus",
-                "components/vectordbs/dbs/azure_ai_search"
+                "components/vectordbs/dbs/azure_ai_search",
+                "components/vectordbs/dbs/redis"
               ]
             }
           ]
@@ -156,7 +158,9 @@
             "api-reference/memory/delete-memory",
             "api-reference/memory/v1-search-memories",
             "api-reference/memory/v2-search-memories",
-            "api-reference/memory/history-memory"
+            "api-reference/memory/history-memory",
+            "api-reference/memory/batch-update",
+            "api-reference/memory/batch-delete"
           ]
         },
         {
@@ -223,7 +227,8 @@
         "examples/mem0-with-ollama",
         "examples/personal-ai-tutor",
         "examples/customer-support-agent",
-        "examples/personal-travel-assistant"
+        "examples/personal-travel-assistant",
+        "examples/llama-index-mem0"
       ]
     }
   ],
